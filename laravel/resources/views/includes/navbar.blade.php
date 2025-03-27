@@ -3,8 +3,8 @@
         <div class="m-header">
             <a href="index.html" class="b-brand">
                 <!-- ========   change your logo hear   ============ -->
-                <img src="{{asset('images/logo-full.png')}}" alt="" class="logo logo-lg">
-                <img src="{{asset('images/logo-abbr.png')}}" alt="" class="logo logo-sm">
+                <h3 class="logo logo-lg">Task Manager</h3>
+                <p class="logo logo-sm">Task Manager</p>
             </a>
         </div>
         <div class="navbar-content">

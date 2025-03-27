@@ -12,7 +12,8 @@
         </div>
         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
 
-
+            <router-link class="btn btn-outline-dark " :class="{ 'activeCustom': $route.name == 'createTask' }" :to="{ name: 'createTask' }">Создать задачу</router-link>
+            <router-link class="btn btn-outline-dark " :class="{ 'activeCustom': $route.name == 'allTasks' }" :to="{ name: 'allTasks' }">Все задачи</router-link>
 
 
         </div>

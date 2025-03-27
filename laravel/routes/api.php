@@ -11,6 +11,23 @@ use App\Http\Controllers\apiControllers\users\createUserController;
 
 use App\Http\Controllers\apiControllers\tasks\getAllTasksController;
 
+use App\Http\Controllers\apiControllers\tasks\getDataTaskController;
+
+use App\Http\Controllers\apiControllers\tasks\updateDataTaskController;
+
+use App\Http\Controllers\apiControllers\tasks\createTaskController;
+
+use App\Http\Controllers\apiControllers\comments\getCommentsController;
+
+use App\Http\Controllers\apiControllers\comments\addCommentController;
+
+use App\Http\Controllers\apiControllers\notifications\getNotificationsController;
+
+use App\Http\Controllers\apiControllers\notifications\checkNotificationController;
+
+
+
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -25,3 +42,21 @@ Route::post('/editDataUser', editDataUserController::class);
 Route::post('/createUser', createUserController::class);
 
 Route::get('/getAllTasks', getAllTasksController::class);
+
+
+Route::get('/getDataTask', getDataTaskController::class);
+
+Route::post('/updateDataTask',updateDataTaskController::class);
+
+Route::post('/createTask', createTaskController::class);
+
+
+Route::get('/getComments',getCommentsController::class);
+
+Route::post('/addComment', addCommentController::class);
+
+
+Route::get('/getNotifications', getNotificationsController::class);
+
+Route::post('/checkNotification', checkNotificationController::class);
+

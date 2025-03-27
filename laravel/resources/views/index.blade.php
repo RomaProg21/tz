@@ -10,5 +10,11 @@
         </div>
     </main>
 
+
+    <script>
+        window.Laravel = {
+            userId: {{ auth()->check() ? auth()->id() : 'null' }}
+        };
+    </script>
     
 @include('includes.script')
