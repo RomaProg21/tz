@@ -48,14 +48,18 @@ export default {
     methods: {
         async createUser() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.post('/api/createUser', {
                     name: this.name,
                     email: this.email,
                     password: this.password
                 })
+                this.$store.commit('changePreLoader',false)
+
                 this.$router.push({ name: 'allUsers'})
 
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 if(e.response.data.errors.email){
                     alert(e.response.data.errors.email)
                 } else {

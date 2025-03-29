@@ -55,11 +55,14 @@ export default {
         },
         async getInfoUser() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getInfoUser', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
+                this.$store.commit('changePreLoader',false)
+
                 if (response.data.user != null) {
                     this.user = response.data.user;
                     this.name = response.data.user.name;
@@ -72,17 +75,21 @@ export default {
                 }
 
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e;
             }
         },
         async editDataUser(){
             try{
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.post('/api/editDataUser',{
                     id: this.$route.params.id,
                     name: this.name,
                     email:this.email,
                     password: this.password
                 })
+                this.$store.commit('changePreLoader',false)
+
                 if(response.data.user != null){
                     this.$router.push({ name: 'allUsers'})
                 } else {
@@ -90,6 +97,7 @@ export default {
                     this.$router.push({ name: 'allUsers'})
                 }
             } catch(e){
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },

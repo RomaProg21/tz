@@ -12,7 +12,7 @@
             <p class="card-text">Дата изменения:<strong>{{ task.updated_at }}</strong></p>
             <p class="card-text">Область:<strong>{{ task.area }}</strong></p>
             <p class="card-text">Постановщик:<strong>{{ task.creator_id.name }}(почта:{{ task.creator_id.email
-            }})</strong></p>
+                    }})</strong></p>
             <p class="card-text" v-if="timeInWork != null">Время в работе:<strong>{{
                 timeInWork }}</strong></p>
             <div class="form-group mb-3">
@@ -58,7 +58,8 @@
                                 rows="3"></textarea>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-success mt-3" @click="addComment" :disabled="textComment.length < 1">Добавить</button>
+                            <button class="btn btn-success mt-3" @click="addComment"
+                                :disabled="textComment.length < 1">Добавить</button>
                         </div>
                     </div>
                 </div>
@@ -67,14 +68,13 @@
                 </div>
                 <div class="list-group">
                     <a v-for="(comment, idx) in comments" :key="idx" href="#"
-                        class="list-group-item list-group-item-action " aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ comment.user.email }}</h5>
+                        class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between comment-header">
+                            <h5 class="mb-1" style="word-break: break-word">{{ comment.user.email }}</h5>
                             <small>{{ comment.created_at }}</small>
                         </div>
                         <p class="mb-1">{{ comment.text }}</p>
                     </a>
-
                 </div>
 
             </div>
@@ -109,18 +109,20 @@ export default {
         },
         async getDataTask() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getDataTask', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
-                if(response.data.timeInWork != null){
+                this.$store.commit('changePreLoader',false)
+
+                if (response.data.timeInWork != null) {
                     this.timeInWork = response.data.timeInWork
                 }
-                console.log(response.data)
 
                 if (response.data.task != null) {
-                    
+
                     this.task = response.data.task
                     this.description = response.data.task.description
                     this.status = response.data.task.status
@@ -132,56 +134,69 @@ export default {
 
                 }
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
         async getUsers() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getUsers')
+                this.$store.commit('changePreLoader',false)
                 this.users = response.data.users
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
         async updateDataTask() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.post('/api/updateDataTask', {
                     id: this.$route.params.id,
                     description: this.description,
                     status: this.status,
                     executorId: this.executorId
                 })
+                this.$store.commit('changePreLoader',false)
                 if (response.data.task != null) {
                     this.$router.push({ name: 'allTasks' })
                 } else {
                     alert('Ошибка изменения')
                 }
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
         async getComments() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getComments', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
+                this.$store.commit('changePreLoader',false)
                 this.comments = response.data.comments
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
-        async addComment(){
-            try{
-                const response = await axios.post('/api/addComment',{
-                    comment:this.textComment,
+        async addComment() {
+            try {
+                this.$store.commit('changePreLoader',true)
+                const response = await axios.post('/api/addComment', {
+                    comment: this.textComment,
                     authUser: authUser,
                     taskid: this.$route.params.id
-                })                
+                })
+                this.$store.commit('changePreLoader',false)
                 this.textComment = ''
                 this.getComments()
-            } catch(e){
+            } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         }
@@ -204,3 +219,29 @@ export default {
     }
 }
 </script>
+
+
+<style scoped>
+/* Базовые стили */
+.comment-header {
+  flex-wrap: nowrap; /* Запрещаем перенос элементов по умолчанию */
+  align-items: baseline; /*Выравниваем элементы по базовой линии текста*/
+}
+
+.comment-header h5 {
+  margin-bottom: 0; /* Убираем отступ снизу для h5 */
+  margin-right: auto;  /*  Прижимаем h5 к левому краю, а дату к правому  */
+}
+
+/* Стили для маленьких экранов */
+@media (max-width: 576px) {
+  .comment-header {
+    flex-direction: column; /* Переключаем направление flexbox на столбец */
+    flex-wrap: wrap; /* Разрешаем перенос элементов */
+  }
+
+  .comment-header h5 {
+     margin-right: 0; /* Убираем margin-right на маленьких экранах */
+  }
+}
+</style>

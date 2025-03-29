@@ -10,8 +10,8 @@ export default createStore({
      },
      mutations:{
 
-        editShowModal(state,newValue){
-            state.showModal = newValue
+        changePreLoader(state, newValue){
+            state.preLoader = newValue
         },
 
      },

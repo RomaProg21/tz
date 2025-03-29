@@ -50,9 +50,13 @@ export default {
     methods: {
         async getUsers() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getUsers')
+                this.$store.commit('changePreLoader',false)
+
                 this.users = response.data.users
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },

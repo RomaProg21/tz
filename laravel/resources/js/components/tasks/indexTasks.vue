@@ -146,18 +146,25 @@ export default {
     methods: {
         async getUsers() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getUsers')
+                this.$store.commit('changePreLoader',false)
+
                 this.users = response.data.users
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
         async getAllTasks() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getAllTasks')
+                this.$store.commit('changePreLoader',false)
                 this.tasks = response.data.tasks
                 console.log(this.tasks)
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
@@ -263,7 +270,13 @@ export default {
 
 @media(max-width:478px) {
     .widthAdaptive {
-        width: auto
+        width: 80vw
+    }
+}
+
+@media(max-width:200px) {
+    .widthAdaptive {
+        width: 80vw
     }
 }
 

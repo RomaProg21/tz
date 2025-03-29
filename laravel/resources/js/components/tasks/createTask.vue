@@ -52,14 +52,19 @@ export default {
     methods: {
         async getUsers() {
             try {
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.get('/api/getUsers')
+                this.$store.commit('changePreLoader',false)
+
                 this.users = response.data.users
             } catch (e) {
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         },
         async createTask(){
             try{
+                this.$store.commit('changePreLoader',true)
                 const response = await axios.post('/api/createTask',{
                     name: this.name,
                     area: this.area,
@@ -67,11 +72,13 @@ export default {
                     executor: this.executor,
                     creator: window.Laravel.userId
                 })
+                this.$store.commit('changePreLoader',false)
 
                 this.$router.push({ name: 'allTasks' })
 
 
             } catch(e){
+                this.$store.commit('changePreLoader',false)
                 throw e
             }
         }

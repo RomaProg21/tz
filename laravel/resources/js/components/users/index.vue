@@ -1,6 +1,7 @@
 <template>
 
-
+    <preLoader v-if="$store.state.preLoader"></preLoader>
+     
     <div class="nxl-content">
         <!-- [ page-header ] start -->
         <page-header></page-header>
