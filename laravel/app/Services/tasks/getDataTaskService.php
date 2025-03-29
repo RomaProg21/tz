@@ -10,6 +10,7 @@ use App\Models\Task;
             {
             
                 $task = Task::with(['creator_id','executor_id'])->find($id);
+                $timeInWork = null;
                 if($task){
                     $timeInWork = $task->getTimeInWork();
                 } else {

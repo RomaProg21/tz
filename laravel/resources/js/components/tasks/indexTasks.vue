@@ -3,10 +3,23 @@
         <div class="card mt-5">
             <div class="card-body">
                 <h5 class="card-title">Фильтры</h5>
+                <div class="mb-3">
+                    <label>Сортировать по дате:</label>
+                    <div>
+                        <select class="form-control" v-model="filterDate">
+                            <option value="asc">Возрастранию</option>
+                            <option value="desc">Убыванию</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Поиск по имени задачи</label>
+                    <input type="text" class="form-control" v-model="searchName" placeholder="Введите">
+                </div>
 
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Поиск по всем полям</label>
-                    <input type="text" class="form-control" v-model="searchNameTask" placeholder="Введите">
+                    <input type="text" class="form-control" v-model="searchAll" placeholder="Введите">
                 </div>
 
                 <div class="mb-3">
@@ -16,7 +29,7 @@
                             <input type="checkbox" class="form-check-input" :id="'status-' + status" :value="status"
                                 v-model="statusFilters">
                             <label class="form-check-label" :id="'status-' + status" :for="'status-' + status">{{ status
-                            }}</label>
+                                }}</label>
                         </div>
                     </div>
                 </div>
@@ -70,7 +83,7 @@
         </div>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <div class="card border-dark mb-3 tasks-card widthAdaptive" @click="goToEditTask(task.task)" 
+        <div class="card border-dark mb-3 tasks-card widthAdaptive" @click="goToEditTask(task.task)"
             v-for="(task, idx) in paginatedTasks" :key="idx">
             <div class="card-header p-3">
                 <p>Статус: <strong>{{ task.task.status }}</strong></p>
@@ -93,15 +106,15 @@
         <nav aria-label="Page navigation" v-if="totalPages > 1">
             <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                    <a class="page-link"  @click.prevent="goToPage(currentPage - 1)">Предыдущая</a>
+                    <a class="page-link" @click.prevent="goToPage(currentPage - 1)">Предыдущая</a>
                 </li>
 
                 <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
-                    <a class="page-link"  @click.prevent="goToPage(page)">{{ page }}</a>
+                    <a class="page-link" @click.prevent="goToPage(page)">{{ page }}</a>
                 </li>
 
                 <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                    <a class="page-link"  @click.prevent="goToPage(currentPage + 1)">Следующая</a>
+                    <a class="page-link" @click.prevent="goToPage(currentPage + 1)">Следующая</a>
                 </li>
             </ul>
         </nav>
@@ -117,7 +130,9 @@ export default {
     data() {
         return {
             tasks: [],
-            searchNameTask: '',
+            searchAll: '',
+            searchName: '',
+            filterDate: 'asc',
             statusFilters: ['новая'],
             availableStatuses: ['новая', 'принята', 'в работе', 'отложено', 'выполнено', 'отменено'],
             areaFilter: '',
@@ -153,24 +168,44 @@ export default {
             if (page >= 1 && page <= this.totalPages) {
                 this.currentPage = page;
             }
+        },
+        compareDates(a, b, order = 'asc') {
+            const dateA = new Date(a.task.created_at);
+            const dateB = new Date(b.task.created_at);
+
+            let comparison = dateA.getTime() - dateB.getTime();
+
+            return order === 'asc' ? comparison : comparison * -1;
         }
     },
     computed: {
         paginatedTasks() {
             const start = (this.currentPage - 1) * this.tasksPerPage;
             const end = start + this.tasksPerPage;
-            return this.search.slice(start, end); // Используем 'search' как источник данных
+            return this.search.slice(start, end);
         },
         totalPages() {
-            return Math.ceil(this.search.length / this.tasksPerPage); // Общее количество страниц
+            return Math.ceil(this.search.length / this.tasksPerPage);
         },
         search() {
             let tasks = this.tasks
-            const searchTerm = this.searchNameTask.toLowerCase();
+            const searchTerm = this.searchAll.toLowerCase();
             if (!searchTerm && this.statusFilters.length == 0) {
                 return this.tasks
             }
+            if (this.filterDate) {
+                if (this.filterDate == 'asc') {
+                    tasks.sort((a, b) => this.compareDates(a, b, 'asc'));
+                } else {
+                    tasks.sort((a, b) => this.compareDates(a, b, 'desc'));
 
+                }
+            }
+            if (this.searchName) {
+                tasks = tasks.filter(el => {
+                    return this.searchName.includes(el.task.name)
+                })
+            }
             if (searchTerm) {
                 tasks = tasks.filter(task => {
                     return Object.values(task.task).some(value => {
@@ -190,10 +225,10 @@ export default {
             if (this.areaFilter != '') {
                 tasks = tasks.filter(el => el.task.area == this.areaFilter)
             }
-            if(this.creatorFilter != ''){
+            if (this.creatorFilter != '') {
                 tasks = tasks.filter(el => el.task.creator_id.id == this.creatorFilter)
             }
-            if(this.executorFilter != ''){
+            if (this.executorFilter != '') {
                 tasks = tasks.filter(el => el.task.executor_id.id == this.executorFilter)
             }
 
@@ -215,23 +250,28 @@ export default {
 }
 
 @media(min-width:580px) {
-    .widthAdaptive{
-        width:30rem
-}
+    .widthAdaptive {
+        width: 30rem
+    }
 }
 
 @media(max-width:579px) {
-    .widthAdaptive{
-        width:25rem
+    .widthAdaptive {
+        width: 25rem
+    }
 }
-}
+
 @media(max-width:478px) {
-    .widthAdaptive{
-        width:auto
+    .widthAdaptive {
+        width: auto
+    }
 }
-}
-.btn:focus,.btn:active, a:focus, a:active {
-   outline: none !important;
-   box-shadow: none;
+
+.btn:focus,
+.btn:active,
+a:focus,
+a:active {
+    outline: none !important;
+    box-shadow: none;
 }
 </style>

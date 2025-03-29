@@ -56,7 +56,11 @@ export default {
                 this.$router.push({ name: 'allUsers'})
 
             } catch (e) {
-
+                if(e.response.data.errors.email){
+                    alert(e.response.data.errors.email)
+                } else {
+                    throw e
+                }
             }
         }
     },

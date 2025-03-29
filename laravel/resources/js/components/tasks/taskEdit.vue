@@ -117,6 +117,8 @@ export default {
                 if(response.data.timeInWork != null){
                     this.timeInWork = response.data.timeInWork
                 }
+                console.log(response.data)
+
                 if (response.data.task != null) {
                     
                     this.task = response.data.task
@@ -125,7 +127,8 @@ export default {
                     this.executorId = response.data.task.executor_id.id
                     this.creatorId = response.data.task.creator_id.id
                 } else {
-                    this.error = 'Такого задачи не существует'
+                    this.error = 'Такой задачи не существует'
+                    this.task = false
 
                 }
             } catch (e) {

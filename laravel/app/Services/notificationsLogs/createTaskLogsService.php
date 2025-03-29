@@ -61,6 +61,7 @@ use Illuminate\Support\Facades\Mail;
                     'text' => $content,
                     'checked' => 0,
                 ]);
+                
                 foreach($recipientEmails as $email){
                     Mail::to($email)->send(new MyMail($title, $content));
 

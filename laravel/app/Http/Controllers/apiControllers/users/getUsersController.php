@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\apiControllers\users;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
-use DB;
+use App\Services\users\getUsersService;
 
     class getUsersController extends Controller
         {
-            public function __invoke(Request $request)
+            protected $getUsersService;
+            public function __construct(getUsersService $getUsersService){
+                $this->getUsersService = $getUsersService;
+            }
+            public function __invoke()
             {
-                $users = User::all();
+                $users = $this->getUsersService->getUsers();
                 return response()->json(['users'=>$users]);
             }
         }

@@ -46,7 +46,7 @@ class NotificationsLog extends Model
         $diff = $now->diffInSeconds($this->created_at);
 
         if ($diff < 60) {
-            return 'меньше минуты'; // Или 'только что', по вашему усмотрению
+            return 'меньше минуты';
         } elseif ($diff < 3600) {
             $minutes = floor($diff / 60);
             return $minutes . ' мин. назад';
