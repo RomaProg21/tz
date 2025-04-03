@@ -10,13 +10,12 @@ use App\Models\NotificationsLog;
             
             public function getNotifications($userid)
             {
-                
-                $notifications = NotificationsLog::where(function ($query) use ($userid) {
-                    $query->where('creator_id', $userid)
-                          ->orWhere('executor_id', $userid);
-                })
+                // $notifications = NotificationsLog::where(function ($query) use ($userid) {
+                //     $query->where('creator_id', $userid)
+                //           ->orWhere('executor_id', $userid);
+                // })
+                $notifications = NotificationsLog::where('recipient', $userid)
                 ->where('checked', 0)
-                ->groupBy('task_id')
                 ->get()
                 ->map(function ($notification) {
                     return [

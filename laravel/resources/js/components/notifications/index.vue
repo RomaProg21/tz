@@ -12,13 +12,13 @@
         </div>
         <div class="notifications-item" v-for="(notification, idx) in notifications" :key="idx">
             <div class="notifications-desc">
-                <a href="javascript:void(0);" @click="currentTask(notification.notification.task_id)"
-                    class="font-body text-truncate-2-line"> {{ notification.notification.text }}</a>
+                <a href="javascript:void(0);" @click="currentTask(notification.notification.id)"
+                    class="font-body text-truncate-2-line" style="word-break: break-word !important"> {{ notification.notification.text }}</a>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{ notification.time
                     }}</div>
                     <div class="d-flex align-items-center float-end gap-2">
-                        <a href="javascript:void(0);" v-if="notification.notification.creator_id == authUser" @click="checkNotification(notification.notification.id)"
+                        <a href="javascript:void(0);" v-if="notification.notification.recipient == authUser" @click="checkNotification(notification.notification.id)"
                             class="text-danger" data-bs-toggle="tooltip" title="Прочитать">
                             <i class="feather-check"></i>
 
@@ -26,6 +26,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="notifications-item" v-if="!notifications.length">
+            <div class="font-body text-truncate-2-line text-center">Уведомлений нет</div>
         </div>
     </div>
 
@@ -46,7 +49,7 @@ export default {
     },
     methods: {
         currentTask(id) {
-            window.location.href = `/tasks/${id}`;
+            window.location.href = `/notification/${id}`;
         },
 
         async getNotifications() {
@@ -79,3 +82,16 @@ export default {
 
 }
 </script>
+
+
+<style scoped>
+.dropdown-menu.nxl-notifications-menu { 
+    max-height: 400px; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+}
+
+.notifications-item {
+    padding: 10px; 
+}
+</style>

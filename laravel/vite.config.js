@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/users/index.js',
                 'resources/js/tasks/index.js',
                 'resources/js/notifications/index.js',
+                'resources/js/notifications/notification.js'
 
             ],
             refresh: true,

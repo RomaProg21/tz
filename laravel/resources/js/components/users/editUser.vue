@@ -12,7 +12,7 @@
             </div>
             <div class="form-group mb-3">
                 <p>Пароль:</p>
-                <input type="text" class="form-control" name="password" v-model="password">
+                <input type="password" class="form-control" name="password" v-model="password">
             </div>
 
 

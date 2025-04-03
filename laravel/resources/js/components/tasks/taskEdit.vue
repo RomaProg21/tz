@@ -166,6 +166,10 @@ export default {
                 }
             } catch (e) {
                 this.$store.commit('changePreLoader',false)
+                if(e.response.data.message.includes('invalid mailbox')){
+                    this.$router.push({ name: 'allTasks' })
+
+                }
                 throw e
             }
         },
@@ -197,7 +201,10 @@ export default {
                 this.getComments()
             } catch (e) {
                 this.$store.commit('changePreLoader',false)
-                throw e
+                if(e.response.data.message.includes('invalid mailbox')){
+                    this.textComment = ''
+                    this.getComments()
+                }
             }
         }
     },

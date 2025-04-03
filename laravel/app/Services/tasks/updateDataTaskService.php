@@ -18,11 +18,7 @@ use App\Services\notificationsLogs\createTaskLogsService;
 
 
                 if($task){
-                    if($status != $task->status){
-                        $trigger_type = 'status_changed';
-                        $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task->id, $trigger_type);
-
-                    }
+                    $oldtask = $task->status;
                     if ($status === 'в работе' && ($task->status =='новая' || $task->status =='новая')) {
                         $task->setInWork();
                     } else {
@@ -36,6 +32,13 @@ use App\Services\notificationsLogs\createTaskLogsService;
                     $task->executor_id = $executorId;
                     $timeInWork = $task->getTimeInWork();
                     $task->save();
+
+                    if($status != $oldtask){
+                        $trigger_type = 'status_changed';
+                        $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task, $trigger_type, $oldtask);
+
+                    }
+
                 } else {
                     $task = null;
                 }

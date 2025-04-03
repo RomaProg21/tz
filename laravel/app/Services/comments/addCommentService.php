@@ -25,7 +25,7 @@ use App\Models\Task;
                 $task = Task::find($taskid);
 
                 $trigger_type = 'new_comment';
-                $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task->id, $trigger_type);
+                $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task, $trigger_type, $comment);
 
                 return $newComment;
             }

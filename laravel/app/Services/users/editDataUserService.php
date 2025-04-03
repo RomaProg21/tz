@@ -3,6 +3,7 @@
 namespace App\Services\users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
     class editDataUserService
         {
@@ -11,9 +12,12 @@ use App\Models\User;
                 $user = User::find($id);
 
                 if($user){
+
                     $user->name = $name;
                     $user->email = $email;
-                    $user->password = $password;
+                    if(!Hash::check($password, $user->password)){
+                        $user->password = Hash::make($password);
+                    }
                     $user->save();
                 } else {
                     $user = null;

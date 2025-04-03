@@ -1,7 +1,7 @@
 <nav class="nxl-navigation">
     <div class="navbar-wrapper">
         <div class="m-header">
-            <a href="index.html" class="b-brand">
+            <a href="{{route('tasks')}}" class="b-bran">
                 <!-- ========   change your logo hear   ============ -->
                 <h3 class="logo logo-lg">Task Manager</h3>
                 <p class="logo logo-sm">Task Manager</p>
@@ -13,17 +13,14 @@
                     <label>Навигация</label>
                 </li>
                 <li class="nxl-item nxl-hasmenu">
-                    <a href="{{route('users')}}" class="nxl-link">
+                    <a href="{{route('users')}}" class="nxl-link" style="display:flex">
                         <span class="nxl-micon"><i class="feather-airplay"></i></span>
                         <span class="nxl-mtext">Пользователи</span>
                     </a>
-                    {{-- <ul class="nxl-submenu">
-                        <li class="nxl-item"><a class="nxl-link" href="index.html">CRM</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="analytics.html">Analytics</a></li>
-                    </ul> --}}
+
                 </li>
                 <li class="nxl-item nxl-hasmenu">
-                    <a href="{{route('tasks')}}" class="nxl-link">
+                    <a href="{{route('tasks')}}" class="nxl-link"  style="display:flex">
                         <span class="nxl-micon"><i class="feather-check"></i></span>
                         <span class="nxl-mtext">Задачи</span>
                     </a>

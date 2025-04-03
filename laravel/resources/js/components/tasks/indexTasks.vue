@@ -197,9 +197,7 @@ export default {
         search() {
             let tasks = this.tasks
             const searchTerm = this.searchAll.toLowerCase();
-            if (!searchTerm && this.statusFilters.length == 0) {
-                return this.tasks
-            }
+
             if (this.filterDate) {
                 if (this.filterDate == 'asc') {
                     tasks.sort((a, b) => this.compareDates(a, b, 'asc'));

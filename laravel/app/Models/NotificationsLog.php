@@ -19,10 +19,13 @@ class NotificationsLog extends Model
         'text',
         'trigger_type',
         'recipients',
-        'checked'
+        'checked',
+        'recipient'
     ];
 
-
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s', 
+    ];
     const UPDATED_AT = null;
 
 

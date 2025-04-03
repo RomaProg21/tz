@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Auth;
                 ]);
                 //оповещение
                 $trigger_type = 'created';
-                $this->createTaskLogsService->createTaskLog($area, $executor, $creator, $task->id, $trigger_type);
+                $this->createTaskLogsService->createTaskLog($area, $executor, $creator, $task, $trigger_type, '');
 
                 //---
 

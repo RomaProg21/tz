@@ -26,6 +26,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/tasks{any?}', function () {
         return view('tasks');
     })->where('any','.*')->name('tasks');
+    Route::get('/notification{any?}', function () {
+        return view('notification');
+    })->where('any','.*')->name('notification');
 });
 
 Route::middleware('auth')->group(function () {

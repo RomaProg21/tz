@@ -79,10 +79,10 @@
                         <img src="{{asset('images/avatar/1.png')}}" alt="user-image" class="img-fluid user-avtar me-0">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
-                        <div class="dropdown-header">
-                            <div class="d-flex align-items-center">
+                        <div class="dropdown-header" style="white-space:wrap">
+                            <div class="d-flex align-items-center" style="widrh:100%">
                                 <img src="{{asset('images/avatar/1.png')}}" alt="user-image" class="img-fluid user-avtar">
-                                <div>
+                                <div style="word-break: break-word !important">
                                     <h6 class="text-dark mb-0">{{Auth::user()->name}} <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
                                     <span class="fs-12 fw-medium text-muted">{{Auth::user()->email}}</span>
                                 </div>

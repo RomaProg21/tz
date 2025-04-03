@@ -25,7 +25,7 @@ use App\Http\Controllers\apiControllers\notifications\getNotificationsController
 
 use App\Http\Controllers\apiControllers\notifications\checkNotificationController;
 
-
+use App\Http\Controllers\apiControllers\notifications\getNotificationController;
 
 
 
@@ -33,7 +33,7 @@ use App\Http\Controllers\apiControllers\notifications\checkNotificationControlle
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware(['auth', 'verified'])->group(function () {
+
 
 Route::get('/getUsers', getUsersController::class);
 
@@ -62,4 +62,4 @@ Route::get('/getNotifications', getNotificationsController::class);
 
 Route::post('/checkNotification', checkNotificationController::class);
 
-});
+Route::get('/getNotification', getNotificationController::class);

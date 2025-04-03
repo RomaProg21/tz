@@ -39,6 +39,7 @@
             * {
                 color:black;
             }
+            
         </style>
 </head>
 @vite('resources/js/notifications/index.js')
