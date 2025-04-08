@@ -18,7 +18,7 @@
             <div class="form-group mb-3">
                 <p>Описание:</p>
                 <textarea class="form-control" name="description" :disabled="checkedCreator"
-                    v-model="description"></textarea>
+                    v-model.trim="description"></textarea>
             </div>
             <div class="form-group mb-3">
                 <p>Исполнитель задачи:</p>
@@ -94,9 +94,12 @@ export default {
             task: null,
             error: null,
             description: '',
+            oldDescription: '',
             status: '',
+            statusOld:'',
             users: null,
             executorId: '',
+            executorIdOld: '',
             creatorId: '',
             comments: [],
             textComment: '',
@@ -109,24 +112,26 @@ export default {
         },
         async getDataTask() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.get('/api/getDataTask', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
 
                 if (response.data.timeInWork != null) {
                     this.timeInWork = response.data.timeInWork
                 }
 
                 if (response.data.task != null) {
-
                     this.task = response.data.task
                     this.description = response.data.task.description
+                    this.oldDescription = response.data.task.description
                     this.status = response.data.task.status
+                    this.statusOld = response.data.task.status
                     this.executorId = response.data.task.executor_id.id
+                    this.executorIdOld = response.data.task.executor_id.id
                     this.creatorId = response.data.task.creator_id.id
                 } else {
                     this.error = 'Такой задачи не существует'
@@ -134,39 +139,43 @@ export default {
 
                 }
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 throw e
             }
         },
         async getUsers() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.get('/api/getUsers')
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 this.users = response.data.users
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 throw e
             }
         },
         async updateDataTask() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.post('/api/updateDataTask', {
                     id: this.$route.params.id,
                     description: this.description,
                     status: this.status,
                     executorId: this.executorId
                 })
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 if (response.data.task != null) {
                     this.$router.push({ name: 'allTasks' })
+                    if (window.app) {
+                        const event = new CustomEvent('update-data-notifications');
+                        window.dispatchEvent(event);
+                    }
                 } else {
                     alert('Ошибка изменения')
                 }
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
-                if(e.response.data.message.includes('invalid mailbox')){
+                this.$store.commit('changePreLoader', false)
+                if (e.response.data.message.includes('invalid mailbox')) {
                     this.$router.push({ name: 'allTasks' })
 
                 }
@@ -175,33 +184,37 @@ export default {
         },
         async getComments() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.get('/api/getComments', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 this.comments = response.data.comments
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 throw e
             }
         },
         async addComment() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.post('/api/addComment', {
                     comment: this.textComment,
                     authUser: authUser,
                     taskid: this.$route.params.id
                 })
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 this.textComment = ''
                 this.getComments()
+                if (window.app) {
+                    const event = new CustomEvent('update-data-notifications');
+                    window.dispatchEvent(event);
+                }
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
-                if(e.response.data.message.includes('invalid mailbox')){
+                this.$store.commit('changePreLoader', false)
+                if (e.response.data.message.includes('invalid mailbox')) {
                     this.textComment = ''
                     this.getComments()
                 }
@@ -209,6 +222,7 @@ export default {
         }
     },
     computed: {
+
         checkedCreator() {
             return this.creatorId != authUser
         },
@@ -216,13 +230,21 @@ export default {
             return this.executorId != authUser
         },
         checkChanged() {
-            return this.creatorId != authUser && this.executorId != authUser
+            if(authUser == this.creatorId && authUser == this.executorId){
+                return this.oldDescription == this.description && this.executorId == this.executorIdOld && this.statusOld == this.status
+            } else if(authUser == this.creatorId){
+                return this.oldDescription == this.description && this.executorId == this.executorIdOld
+            } else if(authUser == this.executorId){
+                return this.statusOld == this.status
+            }
+            return (this.creatorId != authUser && this.executorId != authUser)
         }
     },
     mounted() {
         this.getDataTask()
         this.getUsers()
         this.getComments()
+
     }
 }
 </script>
@@ -231,24 +253,31 @@ export default {
 <style scoped>
 /* Базовые стили */
 .comment-header {
-  flex-wrap: nowrap; /* Запрещаем перенос элементов по умолчанию */
-  align-items: baseline; /*Выравниваем элементы по базовой линии текста*/
+    flex-wrap: nowrap;
+    /* Запрещаем перенос элементов по умолчанию */
+    align-items: baseline;
+    /*Выравниваем элементы по базовой линии текста*/
 }
 
 .comment-header h5 {
-  margin-bottom: 0; /* Убираем отступ снизу для h5 */
-  margin-right: auto;  /*  Прижимаем h5 к левому краю, а дату к правому  */
+    margin-bottom: 0;
+    /* Убираем отступ снизу для h5 */
+    margin-right: auto;
+    /*  Прижимаем h5 к левому краю, а дату к правому  */
 }
 
 /* Стили для маленьких экранов */
 @media (max-width: 576px) {
-  .comment-header {
-    flex-direction: column; /* Переключаем направление flexbox на столбец */
-    flex-wrap: wrap; /* Разрешаем перенос элементов */
-  }
+    .comment-header {
+        flex-direction: column;
+        /* Переключаем направление flexbox на столбец */
+        flex-wrap: wrap;
+        /* Разрешаем перенос элементов */
+    }
 
-  .comment-header h5 {
-     margin-right: 0; /* Убираем margin-right на маленьких экранах */
-  }
+    .comment-header h5 {
+        margin-right: 0;
+        /* Убираем margin-right на маленьких экранах */
+    }
 }
 </style>

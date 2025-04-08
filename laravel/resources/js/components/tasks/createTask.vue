@@ -75,10 +75,16 @@ export default {
                 this.$store.commit('changePreLoader',false)
 
                 this.$router.push({ name: 'allTasks' })
-
+                if (window.app) {
+                        const event = new CustomEvent('update-data-notifications');
+                        window.dispatchEvent(event);
+                    }
 
             } catch(e){
                 this.$store.commit('changePreLoader',false)
+                if(e.response.data.message.includes('invalid mailbox')){
+                    this.$router.push({ name: 'allTasks' })
+                }
                 throw e
             }
         }

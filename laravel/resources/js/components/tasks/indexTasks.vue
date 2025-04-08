@@ -29,7 +29,7 @@
                             <input type="checkbox" class="form-check-input" :id="'status-' + status" :value="status"
                                 v-model="statusFilters">
                             <label class="form-check-label" :id="'status-' + status" :for="'status-' + status">{{ status
-                                }}</label>
+                            }}</label>
                         </div>
                     </div>
                 </div>
@@ -146,25 +146,24 @@ export default {
     methods: {
         async getUsers() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.get('/api/getUsers')
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
 
                 this.users = response.data.users
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 throw e
             }
         },
         async getAllTasks() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.get('/api/getAllTasks')
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 this.tasks = response.data.tasks
-                console.log(this.tasks)
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
                 throw e
             }
         },

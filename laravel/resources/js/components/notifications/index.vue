@@ -4,7 +4,7 @@
         <span class="badge bg-danger nxl-h-badge" v-if="notifications.length">{{ notifications.length }}</span>
     </a>
 
-    <div  class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
+    <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
 
         <div class="d-flex justify-content-between align-items-center notifications-head">
             <h6 class="fw-bold text-dark mb-0">Уведомления</h6>
@@ -13,13 +13,15 @@
         <div class="notifications-item" v-for="(notification, idx) in notifications" :key="idx">
             <div class="notifications-desc">
                 <a href="javascript:void(0);" @click="currentTask(notification.notification.id)"
-                    class="font-body text-truncate-2-line" style="word-break: break-word !important"> {{ notification.notification.text }}</a>
+                    class="font-body text-truncate-2-line" style="word-break: break-word !important"> {{
+                        notification.notification.text }}</a>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{ notification.time
-                    }}</div>
+                        }}</div>
                     <div class="d-flex align-items-center float-end gap-2">
-                        <a href="javascript:void(0);" v-if="notification.notification.recipient == authUser" @click="checkNotification(notification.notification.id)"
-                            class="text-danger" data-bs-toggle="tooltip" title="Прочитать">
+                        <a href="javascript:void(0);" v-if="notification.notification.recipient == authUser"
+                            @click="checkNotification(notification.notification.id)" class="text-danger"
+                            data-bs-toggle="tooltip" title="Прочитать">
                             <i class="feather-check"></i>
 
                         </a>
@@ -44,7 +46,7 @@ export default {
     data() {
         return {
             notifications: [],
-            authUser:authUser,
+            authUser: authUser,
         }
     },
     methods: {
@@ -74,10 +76,17 @@ export default {
                 throw e
             }
 
+        },
+        handleUpdateData(data){
+            this.notifications = data
         }
     },
     mounted() {
         this.getNotifications()
+        window.addEventListener('update-data-notifications', () => {
+            this.getNotifications()
+        // this.handleUpdateData(event.detail);
+      });
     }
 
 }
@@ -85,13 +94,13 @@ export default {
 
 
 <style scoped>
-.dropdown-menu.nxl-notifications-menu { 
-    max-height: 400px; 
-    overflow-y: auto; 
+.dropdown-menu.nxl-notifications-menu {
+    max-height: 400px;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
 .notifications-item {
-    padding: 10px; 
+    padding: 10px;
 }
 </style>

@@ -7,6 +7,4 @@ import index from '../components/notifications/index.vue';
 
 app.component('notifications', index);
 
-
-
 app.mount('#notifications');
