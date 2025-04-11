@@ -166,10 +166,6 @@ export default {
                 this.$store.commit('changePreLoader', false)
                 if (response.data.task != null) {
                     this.$router.push({ name: 'allTasks' })
-                    if (window.app) {
-                        const event = new CustomEvent('update-data-notifications');
-                        window.dispatchEvent(event);
-                    }
                 } else {
                     alert('Ошибка изменения')
                 }
@@ -180,6 +176,11 @@ export default {
 
                 }
                 throw e
+            } finally {
+                if (window.app) {
+                    const event = new CustomEvent('update-data-notifications');
+                    window.dispatchEvent(event);
+                }
             }
         },
         async getComments() {
@@ -208,15 +209,17 @@ export default {
                 this.$store.commit('changePreLoader', false)
                 this.textComment = ''
                 this.getComments()
-                if (window.app) {
-                    const event = new CustomEvent('update-data-notifications');
-                    window.dispatchEvent(event);
-                }
+
             } catch (e) {
                 this.$store.commit('changePreLoader', false)
                 if (e.response.data.message.includes('invalid mailbox')) {
                     this.textComment = ''
                     this.getComments()
+                }
+            } finally {
+                if (window.app) {
+                    const event = new CustomEvent('update-data-notifications');
+                    window.dispatchEvent(event);
                 }
             }
         }
