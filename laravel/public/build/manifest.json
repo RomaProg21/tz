@@ -1,0 +1,82 @@
+{
+  "_error-9-b7Kneb.js": {
+    "file": "assets/error-9-b7Kneb.js",
+    "name": "error"
+  },
+  "_index-D8rVyQy1.js": {
+    "file": "assets/index-D8rVyQy1.js",
+    "name": "index"
+  },
+  "_preLoader-DMh7mXZn.js": {
+    "file": "assets/preLoader-DMh7mXZn.js",
+    "name": "preLoader",
+    "imports": [
+      "_error-9-b7Kneb.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BL7yG9zl.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CdBmBHHU.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-D8rVyQy1.js"
+    ]
+  },
+  "resources/js/notifications/index.js": {
+    "file": "assets/index-CKxXNHjW.js",
+    "name": "index",
+    "src": "resources/js/notifications/index.js",
+    "isEntry": true,
+    "imports": [
+      "_error-9-b7Kneb.js",
+      "_index-D8rVyQy1.js"
+    ],
+    "css": [
+      "assets/index-Dv1fVg60.css"
+    ]
+  },
+  "resources/js/notifications/notification.js": {
+    "file": "assets/notification-INHuNBQA.js",
+    "name": "notification",
+    "src": "resources/js/notifications/notification.js",
+    "isEntry": true,
+    "imports": [
+      "_error-9-b7Kneb.js",
+      "_index-D8rVyQy1.js"
+    ]
+  },
+  "resources/js/tasks/index.js": {
+    "file": "assets/index-BC2-cZMt.js",
+    "name": "index",
+    "src": "resources/js/tasks/index.js",
+    "isEntry": true,
+    "imports": [
+      "_error-9-b7Kneb.js",
+      "_preLoader-DMh7mXZn.js",
+      "_index-D8rVyQy1.js"
+    ],
+    "css": [
+      "assets/index-C-YFUg5X.css"
+    ]
+  },
+  "resources/js/users/index.js": {
+    "file": "assets/index-DbgNQy5K.js",
+    "name": "index",
+    "src": "resources/js/users/index.js",
+    "isEntry": true,
+    "imports": [
+      "_error-9-b7Kneb.js",
+      "_preLoader-DMh7mXZn.js",
+      "_index-D8rVyQy1.js"
+    ],
+    "css": [
+      "assets/index-B9zty3g0.css"
+    ]
+  }
+}
