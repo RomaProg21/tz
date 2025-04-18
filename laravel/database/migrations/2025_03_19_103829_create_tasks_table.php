@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->enum('area', ['личная', 'служебная', 'компания']);
             $table->enum('status', ['новая', 'принята', 'в работе', 'отложено', 'выполнено', 'отменено'])->default('новая');
-            $table->text('description')->nullable(); 
-            $table->foreignId('creator_id')->constrained('users')->cascadeOnDelete(); 
-            $table->foreignId('executor_id')->nullable()->constrained('users')->cascadeOnDelete(); 
+            $table->text('description')->nullable();
+            $table->foreignId('creator_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('executor_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamp('in_work_start_time')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

@@ -3,28 +3,23 @@
 namespace App\Services\notificationsLogs;
 
 use App\Models\NotificationsLog;
+use Illuminate\Support\Collection;
+
+class getNotificationsService
+{
+    public function getNotifications(int $userid): Collection
+    {
+        $notifications = NotificationsLog::where('recipient', $userid)
+        ->where('checked', 0)
+        ->get()
+        ->map(function ($notification) {
+            return [
+                'notification' => $notification,
+                'time' => $notification->getTimeSinceCreationAttribute(),
+            ];
+        });
 
 
-    class getNotificationsService
-        {
-            
-            public function getNotifications($userid)
-            {
-                // $notifications = NotificationsLog::where(function ($query) use ($userid) {
-                //     $query->where('creator_id', $userid)
-                //           ->orWhere('executor_id', $userid);
-                // })
-                $notifications = NotificationsLog::where('recipient', $userid)
-                ->where('checked', 0)
-                ->get()
-                ->map(function ($notification) {
-                    return [
-                        'notification' => $notification,
-                        'time' => $notification->getTimeSinceCreationAttribute(),
-                    ];
-                });
-
-                
-                return $notifications;
-            }
-        }
+        return $notifications;
+    }
+}

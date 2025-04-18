@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('notifications_logs', function (Blueprint $table) {
             $table->foreignId('recipient')->constrained('users')->after('executor_id');
-
         });
     }
 

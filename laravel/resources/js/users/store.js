@@ -4,6 +4,7 @@ export default createStore({
      state(){
         return{
           preLoader:false,
+          error: null,
 
         }
 
@@ -13,6 +14,9 @@ export default createStore({
         changePreLoader(state, newValue){
             state.preLoader = newValue
         },
+        changeEror(state, newValue){
+            state.error = newValue
+        }
 
      },
      actions:{

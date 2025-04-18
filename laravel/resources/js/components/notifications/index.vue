@@ -1,4 +1,5 @@
 <template>
+
     <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
         <i class="feather-bell"></i>
         <span class="badge bg-danger nxl-h-badge" v-if="notifications.length">{{ notifications.length }}</span>
@@ -8,15 +9,15 @@
 
         <div class="d-flex justify-content-between align-items-center notifications-head">
             <h6 class="fw-bold text-dark mb-0">Уведомления</h6>
-
         </div>
-        <div class="notifications-item" v-for="(notification, idx) in notifications" :key="idx">
+        <div class="notifications-item" v-for="(notification, idx) in notifications" :key="idx" v-if="error == null">
             <div class="notifications-desc">
                 <a href="javascript:void(0);" @click="currentTask(notification.notification.id)"
                     class="font-body text-truncate-2-line" style="word-break: break-word !important"> {{
                         notification.notification.text }}</a>
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{ notification.time
+                    <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{
+                        notification.time
                         }}</div>
                     <div class="d-flex align-items-center float-end gap-2">
                         <a href="javascript:void(0);" v-if="notification.notification.recipient == authUser"
@@ -29,10 +30,20 @@
                 </div>
             </div>
         </div>
+        <div class="notifications-item" v-else>
+            <div class="notifications-desc">
+                <a href="javascript:void(0);" @click="currentTask(notification.notification.id)"
+                    class="font-body text-truncate-2-line" style="word-break: break-word !important;font-size:10px">
+                    <error :error="error"></error>
+                </a>
+            </div>
+
+        </div>
         <div class="notifications-item" v-if="!notifications.length">
             <div class="font-body text-truncate-2-line text-center">Уведомлений нет</div>
         </div>
     </div>
+
 
 
 
@@ -47,6 +58,7 @@ export default {
         return {
             notifications: [],
             authUser: authUser,
+            error: null,
         }
     },
     methods: {
@@ -63,6 +75,9 @@ export default {
                 })
                 this.notifications = response.data.notifications
             } catch (e) {
+                if (e.response.data.error) {
+                    this.error = e.response.data.error
+                }
                 throw e
             }
         },
@@ -73,11 +88,14 @@ export default {
                 })
                 this.getNotifications()
             } catch (e) {
+                if (e.response.data.error) {
+                    this.error = e.response.data.error
+                }
                 throw e
             }
 
         },
-        handleUpdateData(data){
+        handleUpdateData(data) {
             this.notifications = data
         }
     },
@@ -85,8 +103,7 @@ export default {
         this.getNotifications()
         window.addEventListener('update-data-notifications', () => {
             this.getNotifications()
-        // this.handleUpdateData(event.detail);
-      });
+        });
     }
 
 }

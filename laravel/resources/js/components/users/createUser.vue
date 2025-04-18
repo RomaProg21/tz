@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div v-if="$store.state.error == null">
         <div>
             <div class="form-group mb-3">
                 <p>Имя:</p>
@@ -23,6 +23,9 @@
         </div>
 
     </div>
+    <div v-else>
+        <error :error="$store.state.error"></error>
+    </div>
 
 </template>
 
@@ -41,26 +44,29 @@ export default {
     computed: {
         checkedDisableCreateButton() {
             return this.name == '' ||
-            this.email.length < 4 ||
-            this.password.length < 3
+                this.email.length < 4 ||
+                this.password.length < 3
         }
     },
     methods: {
         async createUser() {
             try {
-                this.$store.commit('changePreLoader',true)
+                this.$store.commit('changePreLoader', true)
                 const response = await axios.post('/api/createUser', {
                     name: this.name,
                     email: this.email,
                     password: this.password
                 })
-                this.$store.commit('changePreLoader',false)
+                this.$store.commit('changePreLoader', false)
 
-                this.$router.push({ name: 'allUsers'})
+                this.$router.push({ name: 'allUsers' })
 
             } catch (e) {
-                this.$store.commit('changePreLoader',false)
-                if(e.response.data.errors.email){
+                this.$store.commit('changePreLoader', false)
+                if (e.response.data.error) {
+                    this.$store.commit('changeEror', e.response.data.error)
+                }
+                if (e.response?.data?.errors?.email) {
                     alert(e.response.data.errors.email)
                 } else {
                     throw e
@@ -69,6 +75,9 @@ export default {
         }
     },
     mounted() {
+        if (this.$store.state.error != null) {
+            this.$store.commit('changeEror', null)
+        }
     }
 }
 </script>

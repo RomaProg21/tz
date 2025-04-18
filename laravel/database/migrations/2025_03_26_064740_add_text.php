@@ -23,7 +23,6 @@ return new class extends Migration
     {
         Schema::table('notifications_logs', function (Blueprint $table) {
             $table->dropColumn('text');
-
         });
     }
 };

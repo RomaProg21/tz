@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/users{any?}', function () {
         return view('index');
-    })->where('any','.*')->name('users');
+    })->where('any', '.*')->name('users');
     Route::get('/tasks{any?}', function () {
         return view('tasks');
-    })->where('any','.*')->name('tasks');
+    })->where('any', '.*')->name('tasks');
     Route::get('/notification{any?}', function () {
         return view('notification');
-    })->where('any','.*')->name('notification');
+    })->where('any', '.*')->name('notification');
 });
 
 Route::middleware('auth')->group(function () {
@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::fallback(function () {
-    return redirect()->route('users'); 
+    return redirect()->route('users');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

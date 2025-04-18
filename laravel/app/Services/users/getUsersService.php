@@ -3,12 +3,13 @@
 namespace App\Services\users;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 
-    class getUsersService
-        {
-            public function getUsers()
-            {
-                $users = User::all();
-                return $users;
-            }
-        }
+class getUsersService
+{
+    public function getUsers(): Collection
+    {
+        $users = User::all();
+        return $users;
+    }
+}

@@ -6,27 +6,26 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Services\notificationsLogs\createTaskLogsService;
 use App\Models\Task;
+use App\Constants\TriggerConstants;
 
+class addCommentService
+{
+        protected $createTaskLogsService;
+    public function __construct(createTaskLogsService $createTaskLogsService)
+    {
+        $this->createTaskLogsService = $createTaskLogsService;
+    }
+    public function addComment(string $comment, int $authUser, int $taskid): void
+    {
+        $newComment = Comment::create([
+            'task_id' => $taskid,
+            'user_id' => $authUser,
+            'text' => $comment
+        ]);
 
-    class addCommentService
-        {
-            protected $createTaskLogsService;
-            public function __construct(createTaskLogsService $createTaskLogsService){
-                $this->createTaskLogsService = $createTaskLogsService;
-            }
-            public function addComment($comment, $authUser, $taskid)
-            {
-                $newComment = Comment::create([
-                    'task_id' => $taskid,
-                    'user_id' => $authUser,
-                    'text' => $comment
-                ]);
-                
-                $task = Task::find($taskid);
+        $task = Task::findOrFail($taskid);
 
-                $trigger_type = 'new_comment';
-                $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task, $trigger_type, $comment);
-
-                return $newComment;
-            }
-        }
+        $trigger_type = TriggerConstants::NEW_COMMENT;
+        $this->createTaskLogsService->createTaskLog($task->area, $task->executor_id, $task->creator_id, $task, $trigger_type, $comment);
+    }
+}

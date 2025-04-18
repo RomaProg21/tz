@@ -1,126 +1,132 @@
 <template>
-    <div class="mt-3 mb-3">
-        <div class="card mt-5">
-            <div class="card-body">
-                <h5 class="card-title">Фильтры</h5>
-                <div class="mb-3">
-                    <label>Сортировать по дате:</label>
-                    <div>
-                        <select class="form-control" v-model="filterDate">
-                            <option value="asc">Возрастранию</option>
-                            <option value="desc">Убыванию</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Поиск по имени задачи</label>
-                    <input type="text" class="form-control" v-model="searchName" placeholder="Введите">
-                </div>
-
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Поиск по всем полям</label>
-                    <input type="text" class="form-control" v-model="searchAll" placeholder="Введите">
-                </div>
-
-                <div class="mb-3">
-                    <label>Статус:</label>
-                    <div v-for="status in availableStatuses" :key="status">
-                        <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input" :id="'status-' + status" :value="status"
-                                v-model="statusFilters">
-                            <label class="form-check-label" :id="'status-' + status" :for="'status-' + status">{{ status
-                            }}</label>
+    <div v-if="$store.state.error == null">
+        <div class="mt-3 mb-3">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h5 class="card-title">Фильтры</h5>
+                    <div class="mb-3">
+                        <label>Сортировать по дате:</label>
+                        <div>
+                            <select class="form-control" v-model="filterDate">
+                                <option value="asc">Возрастранию</option>
+                                <option value="desc">Убыванию</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <label>Область:</label>
-                    <div>
-                        <select class="form-control" v-model="areaFilter">
-                            <option value=""></option>
-                            <option value="личная">Личная</option>
-                            <option value="служебная">Служебная</option>
-                            <option value="компания">Компания</option>
-                        </select>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Поиск по имени задачи</label>
+                        <input type="text" class="form-control" v-model="searchName" placeholder="Введите">
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label>Постановщик:</label>
-                    <div>
-                        <select name="" id="" class="form-control" v-model="creatorFilter">
-                            <option value=""></option>
-                            <option v-for="(user, idx) in users" :key="idx" :value="user.id">{{ user.name }} ({{
-                                user.email }})
-                            </option>
-                        </select>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Поиск по всем полям</label>
+                        <input type="text" class="form-control" v-model="searchAll" placeholder="Введите">
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label>Исполнитель:</label>
-                    <div>
-                        <select name="" id="" class="form-control" v-model="executorFilter">
-                            <option value=""></option>
-                            <option v-for="(user, idx) in users" :key="idx" :value="user.id">{{ user.name }} ({{
-                                user.email }})
-                            </option>
-                        </select>
+                    <div class="mb-3">
+                        <label>Статус:</label>
+                        <div v-for="status in availableStatuses" :key="status">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" :id="'status-' + status" :value="status"
+                                    v-model="statusFilters">
+                                <label class="form-check-label" :id="'status-' + status" :for="'status-' + status">{{
+                                    status
+                                }}</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="d-flex justify-content-center">
+                    <div class="mb-3">
+                        <label>Область:</label>
+                        <div>
+                            <select class="form-control" v-model="areaFilter">
+                                <option value=""></option>
+                                <option value="личная">Личная</option>
+                                <option value="служебная">Служебная</option>
+                                <option value="компания">Компания</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="mb-3">
+                        <label>Постановщик:</label>
+                        <div>
+                            <select name="" id="" class="form-control" v-model="creatorFilter">
+                                <option value=""></option>
+                                <option v-for="(user, idx) in users" :key="idx" :value="user.id">{{ user.name }} ({{
+                                    user.email }})
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Исполнитель:</label>
+                        <div>
+                            <select name="" id="" class="form-control" v-model="executorFilter">
+                                <option value=""></option>
+                                <option v-for="(user, idx) in users" :key="idx" :value="user.id">{{ user.name }} ({{
+                                    user.email }})
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="hstack justify-content-between mb-4">
-        <div>
-            <h5 class="mb-1">Все задачи ({{ search.length }})</h5>
-            <span class="fs-12 text-muted">Список всех задач</span>
-        </div>
-    </div>
-    <div class="d-flex flex-column justify-content-center align-items-center">
-        <div class="card border-dark mb-3 tasks-card widthAdaptive" @click="goToEditTask(task.task)"
-            v-for="(task, idx) in paginatedTasks" :key="idx">
-            <div class="card-header p-3">
-                <p>Статус: <strong>{{ task.task.status }}</strong></p>
-            </div>
-            <div class="card-body text-dark">
-                <h5 class="card-title mb-3">{{ task.task.name }}</h5>
-                <h5 class="card-title mb-3">Исполнитель - {{ task.task.executor_id.name }}(почта:{{
-                    task.task.executor_id.email }})</h5>
-                <p class="card-text">Дата создания:<strong>{{ task.task.created_at }}</strong></p>
-                <p class="card-text">Дата изменения:<strong>{{ task.task.updated_at }}</strong></p>
-                <p class="card-text">Область:<strong>{{ task.task.area }}</strong></p>
-                <p class="card-text">Постановщик:<strong>{{ task.task.creator_id.name }}(почта:{{
-                    task.task.creator_id.email }})</strong></p>
-                <p class="card-text">Описание задачи:<strong>{{ task.task.description }}</strong></p>
-                <p class="card-text" v-if="task.time_in_work">Время в работе:<strong>{{ task.time_in_work }}</strong>
-                </p>
+        <div class="hstack justify-content-between mb-4">
+            <div>
+                <h5 class="mb-1">Все задачи ({{ search.length }})</h5>
+                <span class="fs-12 text-muted">Список всех задач</span>
             </div>
         </div>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="card border-dark mb-3 tasks-card widthAdaptive" @click="goToEditTask(task.task)"
+                v-for="(task, idx) in paginatedTasks" :key="idx">
+                <div class="card-header p-3">
+                    <p>Статус: <strong>{{ task.task.status }}</strong></p>
+                </div>
+                <div class="card-body text-dark">
+                    <h5 class="card-title mb-3">{{ task.task.name }}</h5>
+                    <h5 class="card-title mb-3">Исполнитель - {{ task.task.executor_id.name }}(почта:{{
+                        task.task.executor_id.email }})</h5>
+                    <p class="card-text">Дата создания:<strong>{{ task.task.created_at }}</strong></p>
+                    <p class="card-text">Дата изменения:<strong>{{ task.task.updated_at }}</strong></p>
+                    <p class="card-text">Область:<strong>{{ task.task.area }}</strong></p>
+                    <p class="card-text">Постановщик:<strong>{{ task.task.creator_id.name }}(почта:{{
+                        task.task.creator_id.email }})</strong></p>
+                    <p class="card-text">Описание задачи:<strong>{{ task.task.description }}</strong></p>
+                    <p class="card-text" v-if="task.time_in_work">Время в работе:<strong>{{ task.time_in_work
+                    }}</strong>
+                    </p>
+                </div>
+            </div>
 
-        <nav aria-label="Page navigation" v-if="totalPages > 1">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                    <a class="page-link" @click.prevent="goToPage(currentPage - 1)">Предыдущая</a>
-                </li>
+            <nav aria-label="Page navigation" v-if="totalPages > 1">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                        <a class="page-link" @click.prevent="goToPage(currentPage - 1)">Предыдущая</a>
+                    </li>
 
-                <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
-                    <a class="page-link" @click.prevent="goToPage(page)">{{ page }}</a>
-                </li>
+                    <li class="page-item" v-for="page in totalPages" :key="page"
+                        :class="{ active: currentPage === page }">
+                        <a class="page-link" @click.prevent="goToPage(page)">{{ page }}</a>
+                    </li>
 
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                    <a class="page-link" @click.prevent="goToPage(currentPage + 1)">Следующая</a>
-                </li>
-            </ul>
-        </nav>
+                    <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                        <a class="page-link" @click.prevent="goToPage(currentPage + 1)">Следующая</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-
-
+    <div v-else>
+        <error :error="$store.state.error"></error>
+    </div>
 </template>
 
 <script>
@@ -153,6 +159,9 @@ export default {
                 this.users = response.data.users
             } catch (e) {
                 this.$store.commit('changePreLoader', false)
+                if (e.response.data.error) {
+                    this.$store.commit('changeEror', e.response.data.error)
+                }
                 throw e
             }
         },
@@ -164,6 +173,9 @@ export default {
                 this.tasks = response.data.tasks
             } catch (e) {
                 this.$store.commit('changePreLoader', false)
+                if (e.response.data.error) {
+                    this.$store.commit('changeEror', e.response.data.error)
+                }
                 throw e
             }
         },
@@ -240,6 +252,9 @@ export default {
         }
     },
     mounted() {
+        if (this.$store.state.error != null) {
+            this.$store.commit('changeEror', null)
+        }
         this.getAllTasks()
         this.getUsers()
     }

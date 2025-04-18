@@ -1,55 +1,64 @@
 <template>
-    <div class="nxl-content" v-if="notification != null">
+    <div v-if="error == null">
 
-        <div class="main-content">
-            <div class="row">
+        <div class="nxl-content" v-if="notification != null">
 
-                <div class="col-12">
-                    <div class="card stretch stretch-full">
-                        <div class="card-body">
-                            <div v-if="notification">
-                                <h5 class="card-text mb-3" v-if="notification.notification.trigger_type == 'created'">
-                                    Тип: создание задачи
-                                </h5>
-                                <h5 class="card-text mb-3"
-                                    v-else-if="notification.notification.trigger_type == 'status_changed'">Тип:
-                                    изменение статуса задачи
-                                </h5>
-                                <h5 class="card-text mb-3" v-else>Тип: новый комментарий
-                                </h5>
-                                <h5 class="card-text mb-3">Исполнитель - {{ notification.notification.executor.name
-                                    }}(почта:{{
-                                        notification.notification.executor.email }})
-                                </h5>
-                                <p class="card-text">{{ notification.time }}</p>
-                                <hr>
-                                <p class="card-text">Область: <strong>{{ notification.notification.area }} </strong></p>
-                                <p class="card-text">Создатель:<strong>{{ notification.notification.creator.name
-                                        }}(почта:{{ notification.notification.creator.email }})</strong></p>
+            <div class="main-content">
+                <div class="row">
 
-                                <p class="card-text">Дата создания:<strong>{{ notification.notification.created_at
-                                        }}</strong></p>
-                                <p class="card-text">Текст оповещения:<strong>{{ notification.notification.text
-                                        }}</strong></p>
-                                <p class="card-text">Список email пользователей:
-                                    <strong>{{ notification.notification.recipients }}</strong>
-                                </p>
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-outline-primary" @click="goToTask">Перейти на страницу задачи</button>
+                    <div class="col-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-body">
+                                <div v-if="notification">
+                                    <h5 class="card-text mb-3"
+                                        v-if="notification.notification.trigger_type == 'created'">
+                                        Тип: создание задачи
+                                    </h5>
+                                    <h5 class="card-text mb-3"
+                                        v-else-if="notification.notification.trigger_type == 'status_changed'">Тип:
+                                        изменение статуса задачи
+                                    </h5>
+                                    <h5 class="card-text mb-3" v-else>Тип: новый комментарий
+                                    </h5>
+                                    <h5 class="card-text mb-3">Исполнитель - {{ notification.notification.executor.name
+                                        }}(почта:{{
+                                            notification.notification.executor.email }})
+                                    </h5>
+                                    <p class="card-text">{{ notification.time }}</p>
+                                    <hr>
+                                    <p class="card-text">Область: <strong>{{ notification.notification.area }} </strong>
+                                    </p>
+                                    <p class="card-text">Создатель:<strong>{{ notification.notification.creator.name
+                                            }}(почта:{{ notification.notification.creator.email }})</strong></p>
+
+                                    <p class="card-text">Дата создания:<strong>{{ notification.notification.created_at
+                                            }}</strong></p>
+                                    <p class="card-text">Текст оповещения:<strong>{{ notification.notification.text
+                                            }}</strong></p>
+                                    <p class="card-text">Список email пользователей:
+                                        <strong>{{ notification.notification.recipients }}</strong>
+                                    </p>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-primary" @click="goToTask">Перейти на страницу
+                                            задачи</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div v-else>
-                                <div class="alert alert-danger text-center">
-                                    Нет такого уведомления
+                                <div v-else>
+                                    <div class="alert alert-danger text-center">
+                                        Нет такого уведомления
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
-
-
             </div>
         </div>
+    </div>
+    <div class="nxl-content" v-else>
+        <error :error="error"></error>
     </div>
 
 </template>
@@ -63,10 +72,11 @@ export default {
         return {
             notificationId: '',
             notification: null,
+            error: null,
         }
     },
     methods: {
-        goToTask(){
+        goToTask() {
             window.location.href = `/tasks/${this.notification.notification.task_id}`;
 
         },
@@ -89,6 +99,9 @@ export default {
                 })
                 this.notification = response.data.notification[0] || false
             } catch (e) {
+                if (e.response.data.error) {
+                    this.error = e.response.data.error
+                }
                 throw e
             }
         }

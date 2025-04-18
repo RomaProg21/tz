@@ -24,26 +24,26 @@ class NotificationsLog extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s', 
+        'created_at' => 'datetime:Y-m-d H:i:s',
     ];
     const UPDATED_AT = null;
 
 
-    public function task()
+    public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);
     }
 
-    public function creator()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function executor()
+    public function executor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'executor_id');
     }
-    public function getTimeSinceCreationAttribute()
+    public function getTimeSinceCreationAttribute(): string
     {
         $now = Carbon::now();
         $diff = $now->diffInSeconds($this->created_at);

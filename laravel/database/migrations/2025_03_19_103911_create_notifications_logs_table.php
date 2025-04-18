@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('notifications_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
-            $table->foreignId('creator_id')->constrained('users'); 
-            $table->foreignId('executor_id')->nullable()->constrained('users'); 
-            $table->string('area'); 
+            $table->foreignId('creator_id')->constrained('users');
+            $table->foreignId('executor_id')->nullable()->constrained('users');
+            $table->string('area');
             $table->enum('trigger_type', ['created', 'status_changed', 'new_comment']);
             $table->json('recipients');
             $table->timestamp('created_at')->useCurrent();

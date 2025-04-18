@@ -4,20 +4,15 @@ namespace App\Services\notificationsLogs;
 
 use App\Models\NotificationsLog;
 
+class checkNotificationService
+{
+    public function checkNotification(int $id): void
+    {
 
+        $notification = NotificationsLog::findOrFail($id);
 
-    class checkNotificationService
-        {
-            
-            public function checkNotification($id)
-            {
-                
-                $notification = NotificationsLog::find($id);
+        $notification->checked = 1;
 
-                $notification->checked = 1;
-
-                $notification->save();
-                
-                return $notification;
-            }
-        }
+        $notification->save();
+    }
+}
